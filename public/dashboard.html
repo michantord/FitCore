@@ -6,11 +6,11 @@
   <title>FitCore | Dashboard Admin</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body style="align-items: flex-start; padding-top: 4rem;">
-  <div class="dashboard-container">
+<body class="dashboard-page">
+  <div class="glass-panel dashboard-panel">
     <div class="dashboard-header">
       <h2>Crear Ejercicio Core</h2>
-      <button id="logoutBtn" class="btn btn-danger">Cerrar Sesión</button>
+      <button id="logoutBtn" class="btn-danger">Cerrar Sesión</button>
     </div>
 
     <div id="alertBox" class="alert"></div>
@@ -21,7 +21,6 @@
         <input type="text" id="exerciseName" class="form-control" required placeholder="Ej. Press de Banca Inclinado">
       </div>
 
-      <!-- Dropdown 1: Grupo Muscular -->
       <div class="form-group">
         <label for="muscleGroup">Grupo Muscular Principal</label>
         <select id="muscleGroup" class="form-control" required>
@@ -29,7 +28,6 @@
         </select>
       </div>
 
-      <!-- Dropdown 2: Músculo Específico (En cascada / Dependiente) -->
       <div class="form-group">
         <label for="specificMuscle">Músculo Específico Objetivo</label>
         <select id="specificMuscle" class="form-control" required disabled>
@@ -37,12 +35,11 @@
         </select>
       </div>
 
-      <button type="submit" class="btn">Registrar Ejercicio en Base de Datos</button>
+      <button type="submit" class="btn">Registrar Ejercicio</button>
     </form>
   </div>
 
   <script>
-    // 1. Verificación básica de sesión
     if (!localStorage.getItem('token')) {
       window.location.href = '/index.html';
     }
@@ -57,7 +54,6 @@
     const alertBox = document.getElementById('alertBox');
     const form = document.getElementById('exerciseForm');
 
-    // 2. Cargar datos del Dropdown Principal desde el Backend
     async function loadGroups() {
       try {
         const res = await fetch('/api/muscle-groups');
@@ -75,11 +71,9 @@
       }
     }
 
-    // 3. Dropdown en Cascada: Cargar segundo dropdown al cambiar el primero
     groupSelect.addEventListener('change', async (e) => {
       const groupId = e.target.value;
       
-      // Si deseleccionan
       if (!groupId) {
         muscleSelect.innerHTML = '<option value="">Primero selecciona un Grupo Muscular</option>';
         muscleSelect.disabled = true;
@@ -87,10 +81,9 @@
       }
 
       muscleSelect.innerHTML = '<option value="">Cargando Músculos...</option>';
-      muscleSelect.disabled = true; // Deshabilitar mientras carga
+      muscleSelect.disabled = true;
 
       try {
-        // Petición al backend usando el ID del grupo seleccionado
         const res = await fetch(`/api/muscles/${groupId}`);
         const muscles = await res.json();
         
@@ -101,29 +94,28 @@
           opt.textContent = m.name;
           muscleSelect.appendChild(opt);
         });
-        muscleSelect.disabled = false; // Rehabilitar cuando termine de cargar
+        muscleSelect.disabled = false;
       } catch (err) {
-        console.error('Error cargando músculos específicos:', err);
+        console.error('Error cargando músculos:', err);
       }
     });
 
-    // 4. Simular envío del formulario de registro
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      alertBox.textContent = '¡Ejercicio registrado con éxito en el Core!';
+      alertBox.textContent = '¡Ejercicio registrado con éxito en la Base de Datos!';
       alertBox.className = 'alert success';
+      alertBox.style.display = 'block';
       
-      // Resetear el formulario y los dropdowns a su estado inicial
       form.reset();
       muscleSelect.innerHTML = '<option value="">Primero selecciona un Grupo Muscular</option>';
       muscleSelect.disabled = true;
       
       setTimeout(() => {
+        alertBox.style.display = 'none';
         alertBox.className = 'alert';
       }, 3000);
     });
 
-    // Iniciar
     loadGroups();
   </script>
 </body>

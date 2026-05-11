@@ -7,10 +7,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="auth-container">
+  <div class="glass-panel">
     <div class="auth-header">
-      <h1>FitCore Admin</h1>
-      <p>Panel de Administración Core</p>
+      <div class="logo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+      </div>
+      <h1>Fit<span>Core</span></h1>
+      <p>Panel de Administración Seguro</p>
     </div>
 
     <div id="alertBox" class="alert"></div>
@@ -21,7 +26,7 @@
         <input type="email" id="email" class="form-control" required placeholder="admin@fitcore.com" autocomplete="email">
       </div>
       <div class="form-group">
-        <label for="password">Contraseña</label>
+        <label for="password">Contraseña (Backend Validated)</label>
         <input type="password" id="password" class="form-control" required placeholder="Min 8 chars, 1 num, 1 especial" autocomplete="current-password">
       </div>
       <button type="submit" class="btn">Ingresar al Sistema</button>
@@ -32,7 +37,6 @@
     const form = document.getElementById('loginForm');
     const alertBox = document.getElementById('alertBox');
 
-    // Verificar si ya hay sesión iniciada (simulado con localStorage)
     if (localStorage.getItem('token')) {
       window.location.href = '/dashboard.html';
     }
@@ -42,9 +46,12 @@
       
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
+      const btn = form.querySelector('.btn');
+      
+      btn.textContent = 'Verificando...';
+      btn.disabled = true;
 
       try {
-        // Enviar datos al backend (Aquí ocurre la validación en backend del dato sensible)
         const response = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -54,14 +61,14 @@
         const data = await response.json();
 
         if (!response.ok) {
-          // Si la validación del backend falla (ej. contraseña débil o incorrecta)
           alertBox.textContent = data.error || 'Error de autenticación';
           alertBox.className = 'alert error';
+          btn.textContent = 'Ingresar al Sistema';
+          btn.disabled = false;
         } else {
-          // Éxito en la autenticación
           alertBox.textContent = 'Autenticación exitosa. Redirigiendo...';
           alertBox.className = 'alert success';
-          localStorage.setItem('token', data.token); // Simulamos guardado de token
+          localStorage.setItem('token', data.token);
           setTimeout(() => {
             window.location.href = '/dashboard.html';
           }, 1000);
@@ -69,6 +76,8 @@
       } catch (error) {
         alertBox.textContent = 'Error de conexión con el servidor.';
         alertBox.className = 'alert error';
+        btn.textContent = 'Ingresar al Sistema';
+        btn.disabled = false;
       }
     });
   </script>
