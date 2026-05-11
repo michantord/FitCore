@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-volt: #C8F84A;
+  --color-night: #0E1014;
+  --color-slate: #1C2030;
+  --color-steel: #2E3347;
+  --color-muted: #6C7392;
+  --color-ice: #E0F0FF;
+  --color-danger: #FF4D4D;
+  --color-warning: #F59E0B;
+  --color-success: #22C55E;
+
+  --font-sans: 'DM Sans', sans-serif;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+body {
+  background-color: var(--color-night);
+  color: #FFFFFF;
+}
