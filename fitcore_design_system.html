@@ -1,0 +1,464 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body, .root {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--color-text-primary);
+    background: transparent;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin-bottom: 16px;
+  }
+
+  .section {
+    margin-bottom: 36px;
+  }
+
+  /* Paleta */
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+  }
+
+  .swatch-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .swatch {
+    height: 56px;
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-end;
+    padding: 6px 8px;
+  }
+
+  .swatch-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1;
+  }
+
+  .swatch-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-top: 4px;
+  }
+
+  .swatch-hex {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--color-text-secondary);
+  }
+
+  /* Colores */
+  .c-volt    { background: #C8F84A; }
+  .c-volt    .swatch-name { color: #2A3A00; }
+  .c-night   { background: #0E1014; }
+  .c-slate   { background: #1C2030; }
+  .c-steel   { background: #2E3347; }
+  .c-muted   { background: #6C7392; }
+  .c-ice     { background: #E0F0FF; }
+  .c-ice     .swatch-name { color: #1A3A5A; }
+  .c-danger  { background: #FF4D4D; }
+  .c-warning { background: #F59E0B; }
+  .c-warning .swatch-name { color: #2A1800; }
+  .c-success { background: #22C55E; }
+  .c-success .swatch-name { color: #0A2A0A; }
+
+  /* Tipografía */
+  .type-row {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .type-row:last-child { border-bottom: none; margin-bottom: 0; }
+
+  .type-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  .type-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 4px;
+    padding: 2px 7px;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+
+  .h1-sample {
+    font-family: 'Syne', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+
+  .h2-sample {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+  }
+
+  .label-sample {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #C8F84A;
+  }
+
+  .body-sample {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+  }
+
+  .stat-sample {
+    font-family: 'DM Mono', monospace;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  /* Componentes demo */
+  .components {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .comp-card {
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 10px;
+  }
+
+  .badge-volt {
+    background: rgba(200,248,74,0.12);
+    color: #C8F84A;
+    border: 0.5px solid rgba(200,248,74,0.3);
+  }
+
+  .badge-danger {
+    background: rgba(255,77,77,0.1);
+    color: #FF4D4D;
+    border: 0.5px solid rgba(255,77,77,0.3);
+  }
+
+  .badge-info {
+    background: rgba(224,240,255,0.1);
+    color: #E0F0FF;
+    border: 0.5px solid rgba(224,240,255,0.2);
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 4px;
+  }
+
+  .card-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin-bottom: 14px;
+  }
+
+  .progress-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--color-background-primary);
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: #C8F84A;
+  }
+
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--color-text-secondary);
+  }
+
+  .btn-primary {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #C8F84A;
+    color: #0E1014;
+    border: none;
+    cursor: pointer;
+    margin-right: 8px;
+  }
+
+  .btn-ghost {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 0.5px solid var(--color-border-secondary);
+    cursor: pointer;
+  }
+
+  .stat-mini {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .stat-lbl {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--color-text-secondary);
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .divider {
+    height: 0.5px;
+    background: var(--color-border-tertiary);
+    margin: 12px 0;
+  }
+</style>
+
+<div class="root" style="padding: 0 0 8px;">
+
+  <!-- Paleta de colores -->
+  <div class="section">
+    <div class="section-label">01 — Paleta de colores</div>
+    <div class="swatches">
+      <div class="swatch-group">
+        <div class="swatch c-volt"><span class="swatch-name">#C8F84A</span></div>
+        <div class="swatch-label">Volt</div>
+        <div class="swatch-hex">Acento principal</div>
+      </div>
+      <div class="swatch-group">
+        <div class="swatch c-night"><span class="swatch-name">#0E1014</span></div>
+        <div class="swatch-label">Night</div>
+        <div class="swatch-hex">Fondo base</div>
+      </div>
+      <div class="swatch-group">
+        <div class="swatch c-slate"><span class="swatch-name">#1C2030</span></div>
+        <div class="swatch-label">Slate</div>
+        <div class="swatch-hex">Superficies / Cards</div>
+      </div>
+      <div class="swatch-group">
+        <div class="swatch c-steel"><span class="swatch-name">#2E3347</span></div>
+        <div class="swatch-label">Steel</div>
+        <div class="swatch-hex">Bordes / Hover</div>
+      </div>
+      <div class="swatch-group">
+        <div class="swatch c-muted"><span class="swatch-name">#6C7392</span></div>
+        <div class="swatch-label">Muted</div>
+        <div class="swatch-hex">Texto secundario</div>
+      </div>
+      <div class="swatch-group">
+        <div class="swatch c-ice"><span class="swatch-name">#E0F0FF</span></div>
+        <div class="swatch-label">Ice</div>
+        <div class="swatch-hex">Info / Admin</div>
+      </div>
+      <div class="swatch-group">
+        <div class="swatch c-danger"><span class="swatch-name">#FF4D4D</span></div>
+        <div class="swatch-label">Danger</div>
+        <div class="swatch-hex">Error / Bloqueo</div>
+      </div>
+      <div class="swatch-group">
+        <div class="swatch c-warning"><span class="swatch-name">#F59E0B</span></div>
+        <div class="swatch-label">Warning</div>
+        <div class="swatch-hex">Alerta / Inactivo</div>
+      </div>
+      <div class="swatch-group">
+        <div class="swatch c-success"><span class="swatch-name">#22C55E</span></div>
+        <div class="swatch-label">Success</div>
+        <div class="swatch-hex">Completado</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tipografía -->
+  <div class="section">
+    <div class="section-label">02 — Tipografía</div>
+
+    <div class="type-row">
+      <div class="type-meta">
+        <span class="type-tag">Syne 800</span>
+        <span class="type-tag">36px</span>
+        <span class="type-tag">H1 / Hero</span>
+      </div>
+      <div class="h1-sample">Entrena sin límites.</div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">
+        <span class="type-tag">Syne 600</span>
+        <span class="type-tag">22px</span>
+        <span class="type-tag">H2 / Sección</span>
+      </div>
+      <div class="h2-sample">Mis rutinas activas</div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">
+        <span class="type-tag">DM Mono 500</span>
+        <span class="type-tag">11px</span>
+        <span class="type-tag">Labels / Tags</span>
+      </div>
+      <div class="label-sample">Nivel avanzado · 4 semanas</div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">
+        <span class="type-tag">DM Sans 400</span>
+        <span class="type-tag">15px</span>
+        <span class="type-tag">Body</span>
+      </div>
+      <div class="body-sample">Completa el 80% de tus rutinas esta semana para desbloquear el plan de fuerza avanzado. Te faltan 2 sesiones.</div>
+    </div>
+
+    <div class="type-row">
+      <div class="type-meta">
+        <span class="type-tag">DM Mono 500</span>
+        <span class="type-tag">28px</span>
+        <span class="type-tag">Stats / Números</span>
+      </div>
+      <div class="stat-sample">12,450 kcal</div>
+    </div>
+  </div>
+
+  <!-- Componentes demo -->
+  <div class="section">
+    <div class="section-label">03 — Componentes de referencia</div>
+    <div class="components">
+
+      <!-- Card rutina -->
+      <div class="comp-card">
+        <div class="badge badge-volt">
+          <i class="ti ti-bolt" aria-hidden="true" style="font-size:11px;"></i>
+          Activa
+        </div>
+        <div class="card-title">Fuerza — Tren superior</div>
+        <div class="card-sub">6 ejercicios · 45 min</div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 68%;"></div>
+        </div>
+        <div class="progress-meta">
+          <span>Progreso</span>
+          <span>68%</span>
+        </div>
+      </div>
+
+      <!-- Card bloqueada -->
+      <div class="comp-card" style="opacity: 0.65;">
+        <div class="badge badge-danger">
+          <i class="ti ti-lock" aria-hidden="true" style="font-size:11px;"></i>
+          Bloqueada
+        </div>
+        <div class="card-title">Resistencia avanzada</div>
+        <div class="card-sub">Completa nivel intermedio</div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 30%; background: #FF4D4D;"></div>
+        </div>
+        <div class="progress-meta">
+          <span>Requisito</span>
+          <span>30%</span>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="comp-card" style="grid-column: 1 / -1;">
+        <div class="card-sub" style="margin-bottom: 12px;">Botones principales</div>
+        <button class="btn-primary">Iniciar rutina</button>
+        <button class="btn-ghost">Ver detalles</button>
+      </div>
+
+    </div>
+
+    <!-- Stats row -->
+    <div class="stat-row" style="margin-top: 12px;">
+      <div class="comp-card stat-mini">
+        <div class="stat-val">24</div>
+        <div class="stat-lbl">Rutinas completadas</div>
+      </div>
+      <div class="comp-card stat-mini">
+        <div class="stat-val" style="color: #C8F84A;">7</div>
+        <div class="stat-lbl">Racha actual (días)</div>
+      </div>
+      <div class="comp-card stat-mini">
+        <div class="stat-val" style="color: #F59E0B;">3</div>
+        <div class="stat-lbl">Días sin actividad</div>
+      </div>
+    </div>
+  </div>
+
+</div>

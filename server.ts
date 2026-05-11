@@ -87,6 +87,44 @@ app.get('/api/muscles/:groupId', (req, res) => {
 });
 
 // ==========================================
+// REQUISITO: GUARDAR Y MOSTRAR EJERCICIOS (MOCK DB)
+// ==========================================
+const exercises: { id: number, name: string, groupName: string, muscleName: string }[] = [];
+let nextId = 1;
+
+app.post('/api/exercises', (req, res) => {
+  const { name, groupId, muscleId } = req.body;
+  
+  if (!name || !groupId || !muscleId) {
+    return res.status(400).json({ error: 'Faltan datos requeridos.' });
+  }
+
+  const groups = [
+    { id: '1', name: 'Tren Superior' },
+    { id: '2', name: 'Tren Inferior' },
+    { id: '3', name: 'Core / Zona Media' }
+  ];
+  
+  const group = groups.find(g => g.id === groupId);
+  const muscleList = muscleDatabase[groupId] || [];
+  const muscle = muscleList.find(m => m.id === muscleId);
+
+  const newExercise = {
+    id: nextId++,
+    name,
+    groupName: group ? group.name : 'Desconocido',
+    muscleName: muscle ? muscle.name : 'Desconocido'
+  };
+
+  exercises.push(newExercise);
+  res.json({ success: true, exercise: newExercise });
+});
+
+app.get('/api/exercises', (req, res) => {
+  res.json(exercises);
+});
+
+// ==========================================
 // INICIO DEL SERVIDOR
 // ==========================================
 app.listen(PORT, () => {

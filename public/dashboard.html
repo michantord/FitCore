@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="dashboard-page">
-  <div class="glass-panel dashboard-panel">
+  <div class="panel dashboard-panel">
     <div class="dashboard-header">
       <h2>Crear Ejercicio Core</h2>
-      <button id="logoutBtn" class="btn-danger">Cerrar Sesión</button>
+      <button id="logoutBtn" class="btn-ghost">Cerrar Sesión</button>
     </div>
 
     <div id="alertBox" class="alert"></div>
@@ -37,6 +37,15 @@
 
       <button type="submit" class="btn">Registrar Ejercicio</button>
     </form>
+  </div>
+
+  <div class="panel dashboard-panel" style="margin-top: 2rem;">
+    <div class="dashboard-header">
+      <h2>Ejercicios Registrados</h2>
+    </div>
+    <div id="exercisesList" class="exercises-list">
+      <p style="color: var(--c-muted); font-size: 14px;">Cargando ejercicios...</p>
+    </div>
   </div>
 
   <script>
@@ -100,23 +109,67 @@
       }
     });
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      alertBox.textContent = '¡Ejercicio registrado con éxito en la Base de Datos!';
-      alertBox.className = 'alert success';
-      alertBox.style.display = 'block';
-      
-      form.reset();
-      muscleSelect.innerHTML = '<option value="">Primero selecciona un Grupo Muscular</option>';
-      muscleSelect.disabled = true;
-      
-      setTimeout(() => {
-        alertBox.style.display = 'none';
-        alertBox.className = 'alert';
-      }, 3000);
+      const name = document.getElementById('exerciseName').value;
+      const groupId = document.getElementById('muscleGroup').value;
+      const muscleId = document.getElementById('specificMuscle').value;
+
+      try {
+        const res = await fetch('/api/exercises', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, groupId, muscleId })
+        });
+        
+        if (res.ok) {
+          alertBox.textContent = '¡Ejercicio registrado con éxito en el servidor!';
+          alertBox.className = 'alert success';
+          alertBox.style.display = 'block';
+          
+          form.reset();
+          muscleSelect.innerHTML = '<option value="">Primero selecciona un Grupo Muscular</option>';
+          muscleSelect.disabled = true;
+          
+          setTimeout(() => {
+            alertBox.style.display = 'none';
+            alertBox.className = 'alert';
+          }, 3000);
+          
+          loadExercises();
+        }
+      } catch(err) {
+        console.error('Error guardando el ejercicio', err);
+      }
     });
 
+    async function loadExercises() {
+      try {
+        const res = await fetch('/api/exercises');
+        const exercises = await res.json();
+        const listDiv = document.getElementById('exercisesList');
+        
+        if (exercises.length === 0) {
+          listDiv.innerHTML = '<p style="color: var(--c-muted); font-size: 14px;">No hay ejercicios registrados todavía.</p>';
+          return;
+        }
+
+        listDiv.innerHTML = exercises.map(ex => `
+          <div class="exercise-card">
+            <div class="exercise-title">${ex.name}</div>
+            <div class="exercise-meta">
+              <span class="badge badge-volt">${ex.groupName}</span>
+              <span class="badge badge-info">${ex.muscleName}</span>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Error cargando la lista de ejercicios:', err);
+      }
+    }
+
     loadGroups();
+    loadExercises();
   </script>
 </body>
 </html>
