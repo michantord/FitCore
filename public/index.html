@@ -6,6 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FIT</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Efectos hover para el enlace de alternancia */
+    #toggleAuthLink:hover {
+      color: var(--c-volt-hover) !important;
+      text-decoration: underline !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -28,30 +35,85 @@
         <input type="password" id="password" class="form-control" required placeholder="Min 8 chars, 1 num, 1 especial"
           autocomplete="current-password">
       </div>
-      <button type="submit" class="btn">Ingresar al Sistema</button>
+      <button type="submit" class="btn" id="submitBtn">Ingresar al Sistema</button>
     </form>
+
+    <div class="auth-footer" style="text-align: center; margin-top: 1.5rem;">
+      <p id="footerLogin" style="font-family: var(--font-sans); font-size: 14px; color: var(--c-muted);">
+        ¿No tienes una cuenta? <a href="#" id="toSignupLink" style="color: var(--c-volt); text-decoration: none; font-weight: 500; transition: color 0.2s;">Regístrate aquí</a>
+      </p>
+      <p id="footerSignup" style="font-family: var(--font-sans); font-size: 14px; color: var(--c-muted); display: none;">
+        ¿Ya tienes una cuenta? <a href="#" id="toLoginLink" style="color: var(--c-volt); text-decoration: none; font-weight: 500; transition: color 0.2s;">Inicia sesión aquí</a>
+      </p>
+    </div>
   </div>
 
   <script>
     const form = document.getElementById('loginForm');
     const alertBox = document.getElementById('alertBox');
+    const authHeaderTitle = document.querySelector('.auth-header p');
+    const submitBtn = document.getElementById('submitBtn');
+    const footerLogin = document.getElementById('footerLogin');
+    const footerSignup = document.getElementById('footerSignup');
+
+    let isLoginMode = true;
 
     if (localStorage.getItem('token')) {
       window.location.href = '/dashboard.html';
     }
 
+    function setMode(loginMode) {
+      isLoginMode = loginMode;
+
+      if (isLoginMode) {
+        authHeaderTitle.textContent = 'Inicio de Sesión';
+        submitBtn.textContent = 'Ingresar al Sistema';
+        footerLogin.style.display = '';
+        footerSignup.style.display = 'none';
+      } else {
+        authHeaderTitle.textContent = 'Crear Cuenta';
+        submitBtn.textContent = 'Registrarse';
+        footerLogin.style.display = 'none';
+        footerSignup.style.display = '';
+      }
+
+      alertBox.style.display = 'none';
+      alertBox.textContent = '';
+      alertBox.className = 'alert';
+    }
+
+    document.getElementById('toSignupLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      setMode(false);
+    });
+
+    document.getElementById('toLoginLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      setMode(true);
+    });
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      const btn = form.querySelector('.btn');
+      const btn = submitBtn;
 
-      btn.textContent = 'Verificando...';
+      if (!email || !password) {
+        alertBox.textContent = 'Por favor completa todos los campos.';
+        alertBox.className = 'alert error';
+        alertBox.style.display = '';
+        return;
+      }
+
+      btn.textContent = isLoginMode ? 'Verificando...' : 'Creando Cuenta...';
       btn.disabled = true;
 
+      const endpoint = isLoginMode ? '/api/login' : '/api/signup';
+      console.log('Enviando a:', endpoint, '| Modo login:', isLoginMode);
+
       try {
-        const response = await fetch('/api/login', {
+        const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
@@ -60,22 +122,33 @@
         const data = await response.json();
 
         if (!response.ok) {
-          alertBox.textContent = data.error || 'Error de autenticación';
+          alertBox.textContent = data.error || 'Error en la operación';
           alertBox.className = 'alert error';
-          btn.textContent = 'Ingresar al Sistema';
+          alertBox.style.display = '';
+          btn.textContent = isLoginMode ? 'Ingresar al Sistema' : 'Registrarse';
           btn.disabled = false;
         } else {
-          alertBox.textContent = 'Autenticación exitosa. Redirigiendo...';
+          alertBox.textContent = data.message || (isLoginMode ? 'Autenticación exitosa. Redirigiendo...' : 'Registro exitoso. Redirigiendo...');
           alertBox.className = 'alert success';
-          localStorage.setItem('token', data.token);
-          setTimeout(() => {
-            window.location.href = '/dashboard.html';
-          }, 1000);
+          alertBox.style.display = '';
+          
+          // Guardar el token si no es un registro con confirmación pendiente
+          if (isLoginMode || (data.token && !data.token.startsWith('token-temp-'))) {
+            localStorage.setItem('token', data.token);
+            setTimeout(() => {
+              window.location.href = '/dashboard.html';
+            }, 1000);
+          } else {
+            // Caso donde requiere confirmación de correo
+            btn.textContent = 'Registrarse';
+            btn.disabled = false;
+          }
         }
       } catch (error) {
         alertBox.textContent = 'Error de conexión con el servidor.';
         alertBox.className = 'alert error';
-        btn.textContent = 'Ingresar al Sistema';
+        alertBox.style.display = '';
+        btn.textContent = isLoginMode ? 'Ingresar al Sistema' : 'Registrarse';
         btn.disabled = false;
       }
     });
