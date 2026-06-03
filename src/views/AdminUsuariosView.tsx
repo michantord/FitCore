@@ -39,9 +39,13 @@ export default function AdminUsuariosView() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
       <h2 style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 22, letterSpacing: '-0.01em', color: '#F0F2FF', margin: '0 0 20px' }}>
-        Usuarios y sus rutinas
+        TOP 3 con más rutinas: {usuariosNormales.sort((a, b) => rutinasPorUsuario(b.id).length - rutinasPorUsuario(a.id).length).slice(0, 3).map((u) => u.nombre).join(', ')}
       </h2>
 
+      <h2 style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 22, letterSpacing: '-0.01em', color: '#F0F2FF', margin: '0 0 20px' }}>
+        Usuarios y sus rutinas
+      </h2>
+      
       {usuariosNormales.length === 0 ? (
         <p className="text-dim text-center py-12">No hay usuarios registrados aún.</p>
       ) : (
