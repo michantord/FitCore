@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Documento de apoyo personal (no se sube)
+GUION_VIDEO.md
