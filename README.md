@@ -8,6 +8,21 @@ ejercicios y ver a todos los usuarios.
 
 **Stack:** React 19 + TypeScript + Vite + Tailwind CSS v4 + Supabase (PostgreSQL + Auth).
 
+## Deploy
+
+https://fit-core-eight.vercel.app/
+
+**Admin Credentials:**
+
+- juanito@fit.com
+- JJuanito11$
+
+
+**User Credentials (or create a new user account)**
+
+- anita@fit.com
+- AAnita11$
+
 ---
 
 ## Mejoras del Core: SOLID + Patrones de Diseño
@@ -159,14 +174,6 @@ npm run lint      # ESLint
 
 > La `anon key` de Supabase ya viene configurada en `src/services/supabaseClient.ts`.
 
-### Despliegue (Vercel)
-
-El proyecto incluye `vercel.json` con el rewrite para SPA. Para desplegar:
-
-1. Sube el repo a GitHub.
-2. En [vercel.com](https://vercel.com) → **Add New → Project** → importa el repo.
-3. Framework preset: **Vite**. Build command: `npm run build`. Output: `dist`.
-4. Deploy. ✅
 
 ---
 
