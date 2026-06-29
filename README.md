@@ -12,8 +12,7 @@ ejercicios y ver a todos los usuarios.
 
 ## 🎯 Mejoras del Core: SOLID + Patrones de Diseño
 
-Este es el foco de la entrega. El **core** del proyecto es la lógica de negocio
-que vive en `src/controllers/`:
+El **core** del proyecto vive en `src/controllers/`:
 
 - **Calcular el nivel de una rutina** según su frecuencia y dificultad.
 - **Clasificar el nivel del usuario** según su perfil físico.
