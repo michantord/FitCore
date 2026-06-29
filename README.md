@@ -10,7 +10,7 @@ ejercicios y ver a todos los usuarios.
 
 ---
 
-## 🎯 Mejoras del Core: SOLID + Patrones de Diseño
+## Mejoras del Core: SOLID + Patrones de Diseño
 
 El **core** del proyecto vive en `src/controllers/`:
 
@@ -129,7 +129,7 @@ nueva = crear una clase y meterla al arreglo. **El motor nunca cambia** (OCP).
 
 ---
 
-## 📁 Estructura del core refactorizado
+## Estructura del core refactorizado
 
 ```
 src/controllers/
@@ -147,7 +147,7 @@ src/controllers/
 
 ---
 
-## 🚀 Cómo ejecutar el proyecto
+## Cómo ejecutar el proyecto
 
 ```bash
 npm install
@@ -170,7 +170,7 @@ El proyecto incluye `vercel.json` con el rewrite para SPA. Para desplegar:
 
 ---
 
-## 🏗️ Arquitectura general (MVC)
+## Arquitectura general (MVC)
 
 ```
 src/
